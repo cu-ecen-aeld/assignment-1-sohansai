@@ -1,27 +1,20 @@
-#!/bin/sh
-# Author: sohansai
+#!/usr/bin/bash
 
-
-WRITEFILE=""
-WRITESTR=""
-
-if [ $# -lt 2 ]
-then
-	echo "Incorrect Number of arguments"
-	echo "Usage example: writer.sh writefile writestr"
-	exit 1
-else
-	WRITEFILE=$1
-	WRITESTR=$2
-
-	parentdirname=$(dirname $WRITEFILE)
-	mkdir -p $parentdirname
-
-	if [ ! -d $parentdirname ]
-	then
-		echo "$parentdirname directory cannot be created"
-		exit 1
-	fi
+if [[ $# != 2 ]]; then
+  echo "Something is wrong with the parameters"
+  exit 1
 fi
 
-echo $WRITESTR > $WRITEFILE
+writefile=$1
+writestr=$2
+
+dname=$(dirname ${writefile})
+fname=$(basename ${writefile})
+
+if ! [[ -d ${filesdir} ]]; then
+  mkdir -p ${dname}
+fi
+
+echo ${writestr} >${writefile}
+
+exit 0
