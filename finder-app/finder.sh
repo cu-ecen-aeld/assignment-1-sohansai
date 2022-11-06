@@ -1,18 +1,28 @@
 #!/bin/sh
+# Author: sohansai
 
-if [ "$#" -ne 2 ]
+
+FILESDIR=""
+SEARCHSTR=""
+
+if [ $# -lt 2 ]
 then
-	echo "Expected 2 arguments but got $#"
+	echo "Incorrect Number of arguments"
+	echo "Usage example: finder.sh filesdir searchstr"
 	exit 1
-elif [ ! -d "$1" ]
-then
-	echo "First argument is not a directory or does not exist"
-	exit 1
+else
+	FILESDIR=$1
+	SEARCHSTR=$2
+	if [ ! -d $FILESDIR ]
+	then
+		echo "$FILESDIR is not a directory"
+		exit 1
+	fi
 fi
 
-FILESDIR="$1"
-SEARCHSTR="$2"
-TOTAL=$(find "$FILESDIR" -type f | wc -l)
-LINES=$(grep -r "$SEARCHSTR" "$FILESDIR" | wc -l)
+output=$(grep -rch "$SEARCHSTR" $FILESDIR | grep -v 0)
 
-echo "The number of files are ${TOTAL} and the number of matching lines are ${LINES}"
+NOOFFILES=$(echo $output | wc -w)
+NOOFMATCHINGLINES=$(echo $output | sed 's/ /+/g' | bc)
+
+echo "The number of files are $NOOFFILES and the number of matching lines are $NOOFMATCHINGLINES"
