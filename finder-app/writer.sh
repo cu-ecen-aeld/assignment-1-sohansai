@@ -1,12 +1,34 @@
-#!/bin/sh
+#!/usr/bin/bash
 
-if [ "$#" -ne 2 ]
+echo "$0 $1 $2"
+
+FILENAME=$1
+CONTENT=$2
+
+if [ $# -lt 2 ]
 then
-	echo "Expected 2 arguments but got $#"
-	exit 1
+    echo "Need at least two parameters"
+    exit 1
 fi
 
-WRITEFILE="$1"
-WRITESTR="$2"
-mkdir -p "${WRITEFILE%/*}"
-echo "$WRITESTR" > "$WRITEFILE"
+# if [ -d $FILENAME ]
+# then
+#     echo "$1"
+# else
+#     echo "$1 is not a directory"
+#     exit 1
+# fi
+
+touch $FILENAME
+
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
+
+echo $2 > $FILENAME
+
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
