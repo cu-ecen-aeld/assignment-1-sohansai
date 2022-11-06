@@ -1,20 +1,27 @@
-#!/bin/bash
+#!/bin/sh
+# Author: sohansai
 
-writefile=$1
-writestr=$2
-#echo "Parent Directory to search: ${writefile}";
-#echo "String to search: ${writestr}";
 
-if [ $# -ne 2 ]; then
-    echo "ERROR: $# argument(s) received. Only 2 is acceptable."
-    exit 1
-fi
+WRITEFILE=""
+WRITESTR=""
 
-echo $writestr > $writefile
-
-if [ -e "$writefile" ]; then
-    exit 0
+if [ $# -lt 2 ]
+then
+	echo "Incorrect Number of arguments"
+	echo "Usage example: writer.sh writefile writestr"
+	exit 1
 else
-    echo "ERROR: $writefile does NOT exist."
-    exit 1
+	WRITEFILE=$1
+	WRITESTR=$2
+
+	parentdirname=$(dirname $WRITEFILE)
+	mkdir -p $parentdirname
+
+	if [ ! -d $parentdirname ]
+	then
+		echo "$parentdirname directory cannot be created"
+		exit 1
+	fi
 fi
+
+echo $WRITESTR > $WRITEFILE
