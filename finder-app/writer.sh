@@ -1,14 +1,38 @@
-#!/bin/sh
+#!/bin/bash
+# Assignment 1 writer
 
+usage() {
+    echo "Usage: $0 <file> <insert string> "
+}
 
-if [ $# -ne 2 ];then
-    echo "ERROR: two arguments required"
-    echo "$0 [FULL PATH TO FILE] [STRING TO WRITE]"
+err() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+if [[ $# -lt 2 ]]
+then
+    usage
     exit 1
-else
-    writefile=$1
-    writestr=$2
-
-    echo $writestr > $writefile
 fi
 
+CREATEFILE=$1
+CREATESTR=$2
+
+DIR=$(dirname "$CREATEFILE")
+if [[ ! -d $DIR ]]
+then
+   echo "Attempting to create directory $DIR"
+   if ! mkdir -p "$DIR" 2>/dev/null
+   then
+      err "Unable to create directory $DIR"
+      exit 1
+   else 
+       echo "Directory $DIR created"
+   fi
+fi
+
+if ! echo "$CREATESTR" > "$CREATEFILE"
+then
+    err "Unable to create file $CREATEFILE"
+    exit1
+fi
