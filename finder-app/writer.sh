@@ -1,34 +1,14 @@
-#!/usr/bin/bash
+#!/bin/sh
 
-echo "$0 $1 $2"
 
-FILENAME=$1
-CONTENT=$2
-
-if [ $# -lt 2 ]
-then
-    echo "Need at least two parameters"
+if [ $# -ne 2 ];then
+    echo "ERROR: two arguments required"
+    echo "$0 [FULL PATH TO FILE] [STRING TO WRITE]"
     exit 1
+else
+    writefile=$1
+    writestr=$2
+
+    echo $writestr > $writefile
 fi
 
-# if [ -d $FILENAME ]
-# then
-#     echo "$1"
-# else
-#     echo "$1 is not a directory"
-#     exit 1
-# fi
-
-touch $FILENAME
-
-if [ $? -ne 0 ]
-then
-    exit 1
-fi
-
-echo $2 > $FILENAME
-
-if [ $? -ne 0 ]
-then
-    exit 1
-fi
