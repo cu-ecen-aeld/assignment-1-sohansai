@@ -1,28 +1,19 @@
-#!/bin/sh
-# Author: sohansai
+#!/usr/bin/bash
 
-
-FILESDIR=""
-SEARCHSTR=""
-
-if [ $# -lt 2 ]
-then
-	echo "Incorrect Number of arguments"
-	echo "Usage example: finder.sh filesdir searchstr"
-	exit 1
-else
-	FILESDIR=$1
-	SEARCHSTR=$2
-	if [ ! -d $FILESDIR ]
-	then
-		echo "$FILESDIR is not a directory"
-		exit 1
-	fi
+if [[ $# != 2 ]]; then
+  exit 1
 fi
 
-output=$(grep -rch "$SEARCHSTR" $FILESDIR | grep -v 0)
+filesdir=$1
+searchstr=$2
 
-NOOFFILES=$(echo $output | wc -w)
-NOOFMATCHINGLINES=$(echo $output | sed 's/ /+/g' | bc)
+if ! [[ -d ${filesdir} ]]; then
+  exit 1
+fi
 
-echo "The number of files are $NOOFFILES and the number of matching lines are $NOOFMATCHINGLINES"
+n_match_lines=$(grep --binary-files text -r ${searchstr} ${filesdir} | wc -l)
+n_match_files=$(grep --binary-files text -l -r ${searchstr} ${filesdir} | sort | uniq | wc -l)
+
+echo "The number of files are ${n_match_files} and the number of matching lines are ${n_match_lines}"
+
+exit 0
