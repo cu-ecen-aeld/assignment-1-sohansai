@@ -1,19 +1,26 @@
-#!/usr/bin/bash
+#!/bin/sh
 
-if [[ $# != 2 ]]; then
-  exit 1
-fi
 
+# Accepts the following runtime arguments: the first argument is a path to a
+# directory on the filesystem, referred to below as filesdir; 
+# the second argument is a text string which will be searched
+# within these files, referred to below as searchstr
 filesdir=$1
 searchstr=$2
 
-if ! [[ -d ${filesdir} ]]; then
-  exit 1
+if [ "$#" -ne 2 ]
+then
+    echo "ERROR: Wrong number of arguments"
+    exit 1
 fi
 
-n_match_lines=$(grep --binary-files text -r ${searchstr} ${filesdir} | wc -l)
-n_match_files=$(grep --binary-files text -l -r ${searchstr} ${filesdir} | sort | uniq | wc -l)
+if [ ! -d $1 ]
+then
+    echo "File path not found"
+    exit 1
+fi
 
-echo "The number of files are ${n_match_files} and the number of matching lines are ${n_match_lines}"
+numfiles=$(find $filesdir -type f | wc -l)
+nummatch=$(grep -r $searchstr $filesdir | wc -l)
 
-exit 0
+echo "The number of files are $numfiles and the number of matching lines are $nummatch"
