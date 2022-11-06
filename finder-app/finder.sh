@@ -1,26 +1,24 @@
 #!/bin/sh
 
 
-# Accepts the following runtime arguments: the first argument is a path to a
-# directory on the filesystem, referred to below as filesdir; 
-# the second argument is a text string which will be searched
-# within these files, referred to below as searchstr
-filesdir=$1
-searchstr=$2
-
-if [ "$#" -ne 2 ]
-then
-    echo "ERROR: Wrong number of arguments"
+if [ $# -ne 2 ];then
+    echo "ERROR: two arguments required"
+    echo "$0 [DIRECTORY] [SEARCH_STRING]"
     exit 1
+else
+    # path to a directory on the filesystem
+    filesdir=$1
+    # a text string which will be searched within these files
+    searchstr=$2
+
+    if [ -d "$filesdir" ];then
+        num_files=$( ls -1q $filesdir | wc -l )
+        # unclear what to do with binary files, may need to be "-I"
+        num_lines=$( grep -I -r "$searchstr" "$filesdir" | wc -l )
+
+        echo "The number of files are ${num_files} and the number of matching lines are ${num_lines}"
+    else
+        echo "$filesdir is not a directory"
+        exit 1
+    fi
 fi
-
-if [ ! -d $1 ]
-then
-    echo "File path not found"
-    exit 1
-fi
-
-numfiles=$(find $filesdir -type f | wc -l)
-nummatch=$(grep -r $searchstr $filesdir | wc -l)
-
-echo "The number of files are $numfiles and the number of matching lines are $nummatch"
