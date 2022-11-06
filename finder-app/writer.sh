@@ -1,30 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
-# Accepts the following arguments: the first argument is a full path to a file (including filename)
-# on the filesystem, referred to below as writefile; the second argument is a text string which will
-# be written within this file, referred to below as writestr
-
-writefile=$1
-writestr=$2
-
-if [ "$#" -ne 2 ]
+if [ $# -lt 2 ]
 then
-    echo "ERROR: Wrong number of arguments"
+    echo "Invalid number of arguments, expected 2 instead got $# arguments"
     exit 1
-fi
+else
+    writefile=$1
+    writestr=$2
 
-path=$(dirname $writefile)
-file=$(basename $writefile)
+    touch $writefile &> /dev/null
 
-if [ ! -d $path ]
-then
-    mkdir -p $path
-fi
-
-echo $writestr > $writefile
-
-if [ ! -f $writefile ]
-then 
-    echo "ERROR: Cannot create file"
-    exit 1
+    if [[ $? == "0" ]]
+    then
+        echo $writestr > $writefile
+    else
+        echo "File $writefile could not be created"
+        rm $writefile
+        exit 1
+    fi
 fi
